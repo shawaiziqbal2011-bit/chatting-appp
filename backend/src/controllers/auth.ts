@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
-import { SignupBody } from "../types";
-import userModel from "../models/user";
+import { SignupBody } from "../types/index.js";
+import userModel from "../models/user.js";
 import bcrypt from "bcrypt";
-import generateTokenAndSetCookie from "../utils/generateJwtToken";
+import generateTokenAndSetCookie from "../utils/generateJwtToken.js";
 
 export const login: RequestHandler = async (req, res, next) => {
   const { email, password }: SignupBody = req.body;

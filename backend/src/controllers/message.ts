@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
-import conversation from "../models/conversation";
-import messagemodle from "../models/message";
+import conversation from "../models/conversation.js";
+import messagemodle from "../models/message.js";
+import { getReceiverSocketId, io } from "../socket/index.js";
 
 export const sendMessage: RequestHandler = async (req, res, next) => {
   try {
@@ -30,6 +31,11 @@ export const sendMessage: RequestHandler = async (req, res, next) => {
     }
     //this is will run parralel
     await Promise.all([conversations.save(), newMessage.save()]);
+
+    const recieverSocketId = getReceiverSocketId(recieverId);
+    if (recieverSocketId) {
+      io.to(recieverId).emit("newMessage", newMessage);
+    }
 
     res.json({ message: "message success fully", success: true });
   } catch (error: any) {
